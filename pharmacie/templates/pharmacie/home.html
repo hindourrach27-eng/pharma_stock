@@ -1,0 +1,292 @@
+{% extends "pharmacie/base.html" %}
+{% block title %}Accueil - Pharma Stock{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ── En-tête ── */
+  .page-title {
+    margin: 16px 0 28px;
+  }
+  .page-title h1 {
+    margin: 0 0 6px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -.4px;
+    color: #111827;
+  }
+  .page-title p {
+    margin: 0;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: .95rem;
+  }
+
+  /* ── Carte conteneur ── */
+  .glass-card {
+    background: rgba(255, 255, 255, .70);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, .75);
+    box-shadow: 0 24px 60px rgba(16, 24, 40, .10);
+    overflow: hidden;
+  }
+
+  /* ── Table ── */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .col-nom    { width: 30%; }
+  .col-prix   { width: 18%; }
+  .col-stock  { width: 15%; }
+  .col-dispo  { width: 20%; }
+  .col-action { width: 17%; }
+
+  /* ── Header ── */
+  thead {
+    background: linear-gradient(135deg, rgba(255,79,160,.08), rgba(255,179,205,.05));
+    border-bottom: 1px solid rgba(255,79,160,.12);
+  }
+  thead th {
+    padding: 16px 20px;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #6b7280;
+    font-weight: 700;
+    text-align: left;
+  }
+  thead th.right { text-align: right; }
+
+  /* ── Lignes ── */
+  tbody tr {
+    border-bottom: 1px solid rgba(255, 79, 160, .07);
+    transition: background .15s ease;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover {
+    background: rgba(255, 79, 160, .04);
+  }
+
+  tbody td {
+    padding: 18px 20px;
+    vertical-align: middle;
+    font-size: .92rem;
+    color: #374151;
+  }
+
+  .td-name strong {
+    font-weight: 700;
+    color: #111827;
+    font-size: .95rem;
+  }
+
+  .td-prix {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: .90rem;
+  }
+
+  .td-stock {
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* ── Badges ── */
+  .badge-stock, .badge-out {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: .80rem;
+    white-space: nowrap;
+  }
+  .badge-stock {
+    background: rgba(16, 185, 129, .12);
+    border: 1px solid rgba(16, 185, 129, .22);
+    color: #065f46;
+  }
+  .badge-out {
+    background: rgba(239, 68, 68, .10);
+    border: 1px solid rgba(239, 68, 68, .18);
+    color: #7f1d1d;
+  }
+
+  /* ── Bouton Commander ── */
+  .td-action { text-align: right; }
+
+  .btn-commander {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255, 79, 160, .45);
+    background: rgba(255, 255, 255, .60);
+    color: var(--fuchsia-dark);
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: .84rem;
+    text-decoration: none;
+    transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+    white-space: nowrap;
+  }
+  .btn-commander .cart {
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity .18s ease, transform .18s ease;
+    font-size: .80rem;
+  }
+  .btn-commander:hover {
+    background: var(--fuchsia);
+    color: #fff;
+    border-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(255, 79, 160, .28);
+  }
+  .btn-commander:hover .cart {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .btn-disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    border-radius: 12px;
+    border: 1px dashed rgba(107, 114, 128, .35);
+    background: transparent;
+    color: #9ca3af;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: .84rem;
+    white-space: nowrap;
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty-state p { margin: 0; font-weight: 500; }
+
+  /* ── Responsive ── */
+  @media (max-width: 720px) {
+    .table, thead, tbody, tr, td { display: block; width: 100%; }
+    thead { display: none; }
+    tbody tr {
+      margin: 0 16px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.70);
+      background: rgba(255,255,255,.75);
+      box-shadow: 0 4px 14px rgba(16,24,40,.06);
+    }
+    tbody tr:hover { transform: translateY(-2px); }
+    tbody td {
+      padding: 12px 16px;
+      border: none;
+      border-bottom: 1px solid rgba(255,79,160,.07);
+      font-size: .88rem;
+    }
+    tbody td:last-child { border-bottom: none; }
+    tbody td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: .68rem;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .td-action { text-align: left; }
+    .btn-commander, .btn-disabled { width: 100%; justify-content: center; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="page-title">
+    <h1>💊 Liste des médicaments</h1>
+    <p>Consultez les stocks disponibles et passez votre commande en un clic.</p>
+  </div>
+
+  <div class="glass-card">
+    <table class="table">
+      <colgroup>
+        <col class="col-nom">
+        <col class="col-prix">
+        <col class="col-stock">
+        <col class="col-dispo">
+        <col class="col-action">
+      </colgroup>
+
+      <thead>
+        <tr>
+          <th>💊 Nom</th>
+          <th>🏷️ Prix</th>
+          <th>📦 Stock</th>
+          <th>Disponible</th>
+          <th class="right">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for m in medicaments %}
+        <tr>
+          <td class="td-name" data-label="Nom">
+            <strong>{{ m.nom }}</strong>
+          </td>
+
+          <td class="td-prix" data-label="Prix">
+            {{ m.prix }} DH
+          </td>
+
+          <td class="td-stock" data-label="Stock">
+            {{ m.stock }}
+          </td>
+
+          <td data-label="Disponible">
+            {% if m.disponible %}
+              <span class="badge-stock">✅ En stock</span>
+            {% else %}
+              <span class="badge-out">⛔ Rupture</span>
+            {% endif %}
+          </td>
+
+          <td class="td-action" data-label="Action">
+            {% if m.stock > 0 %}
+              <a class="btn-commander" href="{% url 'pharmacie:commander' m.id %}">
+                <span class="cart">🛒</span>
+                Commander
+              </a>
+            {% else %}
+              <span class="btn-disabled">Indisponible</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <div class="empty-icon">📭</div>
+              <p>Aucun médicament disponible pour le moment.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

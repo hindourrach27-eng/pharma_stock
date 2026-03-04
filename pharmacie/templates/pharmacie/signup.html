@@ -1,0 +1,168 @@
+{% extends "pharmacie/base.html" %}
+{% block title %}Inscription - Pharma Stock{% endblock %}
+
+{% block content %}
+<style>
+  /* ===== Page auth (même style que login) ===== */
+  .auth-page{
+    min-height: calc(100vh - 90px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 40px 16px;
+    background: radial-gradient(circle at top left, #ffe6ee 0%, #fdf2f4 45%, #ffffff 100%);
+  }
+
+  .auth-card{
+    width: 100%;
+    max-width: 680px;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(255,105,180,0.18);
+    border-radius: 22px;
+    box-shadow: 0 28px 70px rgba(0,0,0,0.12);
+    overflow:hidden;
+  }
+
+  .auth-head{
+    padding: 26px 28px 18px;
+    background: rgba(255, 240, 246, 0.6);
+    border-bottom: 1px solid rgba(255,105,180,0.12);
+  }
+  .auth-head h1{
+    margin: 0;
+    font-size: 34px;
+    font-weight: 800;
+    color: #1f2937;
+    letter-spacing: -0.5px;
+  }
+  .auth-head p{
+    margin: 8px 0 0;
+    color:#6b7280;
+    font-weight: 500;
+  }
+
+  .auth-body{
+    padding: 22px 28px 26px;
+  }
+
+  .auth-body label{
+    font-weight: 700;
+    color:#374151;
+    margin-bottom: 6px;
+  }
+
+  /* Inputs */
+  .auth-body input,
+  .auth-body textarea{
+    width:100% !important;
+    border-radius: 14px;
+    border: 1px solid #cbd5e1;
+    padding: 12px 14px;
+    outline: none;
+    transition: 0.2s ease;
+    background: #eaf2ff;
+  }
+
+  .auth-body textarea{
+    background:#fff;
+    resize: vertical;
+    min-height: 52px;
+  }
+
+  .auth-body input:focus,
+  .auth-body textarea:focus{
+    border-color: #ff4da6;
+    box-shadow: 0 0 0 4px rgba(255,77,166,0.18);
+    background: #fff;
+  }
+
+  /* Option clean : cacher les help_text Django */
+  .helptext{ display:none; }
+  ul{ margin:0; padding-left: 18px; }
+
+  .auth-btn{
+    width:100%;
+    border:none;
+    border-radius: 14px;
+    padding: 13px 16px;
+    font-weight: 800;
+    color: #fff;
+    background: #ff4da6;
+    transition: 0.2s ease;
+    box-shadow: 0 14px 30px rgba(255,77,166,0.22);
+  }
+  .auth-btn:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 18px 36px rgba(255,77,166,0.30);
+    filter: brightness(0.98);
+  }
+
+  .auth-links{
+    display:flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .auth-links a{
+    color:#111827;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
+    transition: .2s;
+  }
+  .auth-links a:hover{
+    border-bottom-color: #ff4da6;
+  }
+
+  .auth-note{
+    margin-top: 10px;
+    color:#6b7280;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  /* Messages erreurs */
+  .alert-auth{
+    border-radius: 14px;
+    border: 1px solid rgba(255,77,166,0.25);
+    background: rgba(255,77,166,0.08);
+    color:#7a1d4e;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+</style>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-head">
+      <h1>Créer un compte</h1>
+      <p>Inscription rapide pour commander vos médicaments</p>
+    </div>
+
+    <div class="auth-body">
+      {% if form.errors %}
+        <div class="alert-auth">Corrige les erreurs ci-dessous.</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="auth-btn">Créer compte</button>
+
+        <div class="auth-links">
+          <a href="{% url 'pharmacie:login' %}">Déjà un compte ? Se connecter</a>
+          <a href="/admin/">Connexion Admin</a>
+        </div>
+
+        <div class="auth-note">
+          Astuce : Si tu es admin, tu peux te connecter directement via “Connexion Admin”.
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

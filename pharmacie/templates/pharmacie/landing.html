@@ -1,0 +1,305 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pharma Stock - Accueil</title>
+
+  <!-- Bootstrap (si tu l’utilises déjà ailleurs, garde le même lien) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #fdf2f4;
+      --pink: #ff69b4;
+      --pink2:#ff85a2;
+      --text:#1f2937;
+    }
+
+    body{
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Navbar */
+    .ps-navbar{
+      background: #ffc0cb;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    .brand-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.6rem;
+      font-weight:800;
+      color:#111 !important;
+      text-decoration:none;
+    }
+    .brand-icon{
+      width:34px;height:34px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,.85);
+      box-shadow: 0 6px 20px rgba(255,105,180,.18);
+    }
+
+    /* Buttons (même style que tes boutons blancs) */
+    .btn-white{
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      font-weight:700;
+      color:#111;
+      border-radius:12px;
+      padding:.55rem 1rem;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn-white:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+    }
+    .btn-pink{
+      background: var(--pink);
+      border: 1px solid rgba(0,0,0,.06);
+      color:#fff;
+      font-weight:800;
+      border-radius:12px;
+      padding:.55rem 1rem;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    }
+    .btn-pink:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(255,105,180,.25);
+      opacity:.95;
+      color:#fff;
+    }
+
+    /* HERO */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius: 20px;
+      background: #ffe6ee;
+      box-shadow: 0 18px 40px rgba(255,105,180,.12);
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: url("{% static 'pharmacie/img/hero.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      filter: saturate(1.05);
+      opacity: .22;
+      transform: scale(1.02);
+    }
+    .hero-content{
+      position:relative;
+      padding: 3.2rem 2.2rem;
+    }
+    .hero h1{
+      font-weight:900;
+      letter-spacing: -0.5px;
+      color:#111;
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+    .hero p{
+      font-size: 1.05rem;
+      color:#374151;
+      max-width: 58ch;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.35rem .7rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(0,0,0,.05);
+      font-weight:700;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    .section-title{
+      font-weight:900;
+      letter-spacing:-0.3px;
+    }
+    .soft-card{
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 18px;
+      background: rgba(255,255,255,.85);
+      box-shadow: 0 10px 22px rgba(0,0,0,.06);
+    }
+    .feature-card{
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,.06);
+      background:#fff;
+      padding: 1.2rem;
+      height:100%;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .feature-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(255,105,180,.12);
+    }
+    .feature-icon{
+      width:44px;height:44px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,105,180,.12);
+      margin-bottom: .8rem;
+      font-weight:900;
+      color: var(--pink);
+    }
+
+    /* Images */
+    .img-round{
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 12px 28px rgba(0,0,0,.08);
+      width:100%;
+      height:auto;
+    }
+
+    /* Footer */
+    .ps-footer{
+      background: #ffc0cb;
+      border-top: 1px solid rgba(0,0,0,.06);
+      color:#111;
+    }
+
+    /* Smooth scroll */
+    html{ scroll-behavior:smooth; }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar ps-navbar navbar-expand-lg">
+    <div class="container py-2">
+      <a class="brand-pill" href="{% url 'pharmacie:landing' %}">
+        <span class="brand-icon">💊</span>
+        <span>Pharma Stock</span>
+      </a>
+
+      <div class="ms-auto d-flex gap-2 align-items-center">
+        <a class="btn btn-white" href="#about">Qui sommes-nous ?</a>
+        <a class="btn btn-white" href="{% url 'pharmacie:login' %}">Connexion</a>
+        <a class="btn btn-pink" href="{% url 'pharmacie:signup' %}">Inscription</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-4">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="chip">✨ Gestion simple • Stock • Commandes • Sécurité</div>
+
+        <div class="row align-items-center g-4">
+          <div class="col-lg-7">
+            <h1>Simplifiez votre gestion de stock de médicaments.</h1>
+            <p class="mt-3">
+              Pharma Stock est une solution moderne pour consulter les médicaments disponibles,
+              passer vos commandes et suivre leur statut. Tout est pensé pour être rapide,
+              clair et sécurisé.
+            </p>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+              <a class="btn btn-pink btn-lg" href="{% url 'pharmacie:signup' %}">S’inscrire</a>
+              <a class="btn btn-white btn-lg" href="{% url 'pharmacie:login' %}">Se connecter</a>
+            </div>
+
+            <div class="mt-3 text-muted">
+              ✅ Interface claire &nbsp;&nbsp;•&nbsp;&nbsp; ✅ Suivi des commandes &nbsp;&nbsp;•&nbsp;&nbsp; ✅ Gestion du stock
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <img class="img-round" src="{% static 'pharmacie/img/hero.jpg' %}" alt="Pharma Stock visuel">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="mt-5">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+          <img class="img-round" src="{% static 'pharmacie/img/dna.jpg' %}" alt="Science et précision">
+        </div>
+        <div class="col-lg-6">
+          <div class="soft-card p-4">
+            <h2 class="section-title mb-2">Qui sommes-nous ?</h2>
+            <p class="mb-0">
+              Pharma Stock est une plateforme conçue pour améliorer l’expérience client et optimiser
+              le traitement des commandes. L’objectif : une gestion fiable, une validation côté admin,
+              et un suivi transparent pour le client.
+            </p>
+            <hr>
+            <ul class="mb-0">
+              <li>🔒 Authentification & sécurité</li>
+              <li>🧾 Suivi complet des commandes</li>
+              <li>📦 Stock mis à jour automatiquement lors de l’acceptation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="mt-5">
+      <div class="text-center mb-4">
+        <img src="{% static 'pharmacie/img/caducee.jpg' %}" alt="Décoration" style="max-width:210px;border-radius:18px;border:1px solid rgba(0,0,0,.06);box-shadow:0 12px 28px rgba(0,0,0,.08);">
+        <h2 class="section-title mt-3">Fonctionnalités clés</h2>
+        <p class="text-muted mb-0">Tout ce qu’il faut pour commander facilement et suivre l’état de votre demande.</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">📦</div>
+            <h5 class="fw-bold">Stock en temps réel</h5>
+            <p class="text-muted mb-0">Affichage clair du stock et disponibilité.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">🛒</div>
+            <h5 class="fw-bold">Commande simple</h5>
+            <p class="text-muted mb-0">Quantité + adresse + date souhaitée.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">✅</div>
+            <h5 class="fw-bold">Validation admin</h5>
+            <p class="text-muted mb-0">Acceptation/refus et stock mis à jour.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h5 class="fw-bold">Suivi livraison</h5>
+            <p class="text-muted mb-0">Statuts visibles et date de livraison affichée.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="ps-footer mt-5 py-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="fw-bold">💊 Pharma Stock</div>
+      <div class="text-muted">© {{ now|default:"2026" }} • Contact • Mentions légales</div>
+    </div>
+  </footer>
+
+</body>
+</html>

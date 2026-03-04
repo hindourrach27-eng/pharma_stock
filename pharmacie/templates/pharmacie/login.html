@@ -1,0 +1,168 @@
+{% extends "pharmacie/base.html" %}
+{% block title %}Connexion - Pharma Stock{% endblock %}
+
+{% block extra_css %}
+<style>
+  .auth-wrap{
+    min-height: calc(100vh - 120px);
+    display:grid;
+    place-items:center;
+    padding: 10px 0;
+  }
+  .auth-card{
+    width: min(520px, 100%);
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .auth-head{
+    padding: 22px 22px 10px;
+    border-bottom: 1px solid rgba(17,24,39,.08);
+  }
+  .auth-head h1{
+    margin:0;
+    font-size: 26px;
+    letter-spacing: -.3px;
+  }
+  .auth-head p{
+    margin:6px 0 0;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .auth-body{ padding: 18px 22px 22px; }
+
+  .field{ margin-bottom: 14px; }
+  .label{
+    display:block;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .02em;
+    margin-bottom: 6px;
+    color:#374151;
+  }
+  .input{
+    width:100%;
+    padding: 12px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(17,24,39,.12);
+    background: rgba(255,255,255,.80);
+    outline: none;
+    transition: border-color .18s ease, box-shadow .18s ease;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  .input:focus{
+    border-color: rgba(255,79,160,.65);
+    box-shadow: 0 0 0 4px rgba(255,79,160,.15);
+  }
+
+  .btn-primary{
+    width:100%;
+    border:0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--fuchsia);
+    color:#fff;
+    font-weight: 800;
+    letter-spacing:.2px;
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    box-shadow: 0 14px 26px rgba(255,79,160,.22);
+  }
+  .btn-primary:hover{
+    background: var(--fuchsia-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 18px 34px rgba(255,79,160,.28);
+  }
+
+  .links{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top: 14px;
+  }
+  .link{
+    color:#374151;
+    text-decoration:none;
+    font-weight: 600;
+    position:relative;
+  }
+  .link:hover{ color:#111827; }
+  .link::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-3px;
+    height:2px;
+    background: rgba(255,79,160,.8);
+    transform: scaleX(0);
+    transform-origin:left;
+    transition: transform .18s ease;
+    border-radius:999px;
+  }
+  .link:hover::after{ transform: scaleX(1); }
+
+  .alert{
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(239,68,68,.20);
+    background: rgba(239,68,68,.08);
+    color:#7f1d1d;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .small-note{
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-head">
+      <h1>Pharma Stock</h1>
+      <p>Veuillez vous identifier</p>
+    </div>
+
+    <div class="auth-body">
+      {% if error %}
+        <div class="alert">{{ error }}</div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="field">
+          <label class="label">Username</label>
+          <input class="input" type="text" name="username" placeholder="Ex: luna" required>
+        </div>
+
+        <div class="field">
+          <label class="label">Password</label>
+          <input class="input" type="password" name="password" placeholder="Votre mot de passe" required>
+        </div>
+
+        <button class="btn-primary" type="submit">Se connecter</button>
+
+        <div class="links">
+          <a class="link" href="{% url 'pharmacie:signup' %}">Créer un compte</a>
+          <a class="link" href="/admin/login/">Connexion Admin</a>
+        </div>
+
+        <div class="small-note">
+          Astuce : Si tu es admin, tu peux te connecter directement via “Connexion Admin”.
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

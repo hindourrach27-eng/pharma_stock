@@ -1,0 +1,191 @@
+{% extends "pharmacie/base.html" %}
+{% block title %}Mes commandes - Pharma Stock{% endblock %}
+
+{% block extra_css %}
+<style>
+  .page-title{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    margin: 8px 0 18px;
+  }
+  .page-title h1{
+    margin:0;
+    font-size: 34px;
+    letter-spacing: -.4px;
+  }
+  .page-title p{
+    margin:0;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .glass-card{
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .glass-inner{ padding: 14px 14px 6px; }
+
+  .table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 10px;
+  }
+  thead th{
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #374151;
+    font-weight: 700;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(17,24,39,.10);
+  }
+  tbody td{
+    padding: 14px 14px;
+    background: rgba(255,255,255,.65);
+    border-top: 1px solid rgba(255,255,255,.55);
+    border-bottom: 1px solid rgba(255,255,255,.55);
+  }
+  tbody tr td:first-child{
+    border-left: 1px solid rgba(255,255,255,.55);
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+  }
+  tbody tr td:last-child{
+    border-right: 1px solid rgba(255,255,255,.55);
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+  tbody tr{
+    transition: transform .18s ease, filter .18s ease;
+  }
+  tbody tr:hover{
+    transform: translateY(-2px);
+    filter: drop-shadow(0 10px 18px rgba(255,79,160,.18));
+  }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 13px;
+    border: 1px solid transparent;
+  }
+
+  /* Statut commande */
+  .b-wait{ background: rgba(255,159,67,.12); border-color: rgba(255,159,67,.20); color:#7a4b00; }
+  .b-ok{ background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.20); color:#065f46; }
+  .b-no{ background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.18); color:#7f1d1d; }
+
+  /* Statut livraison */
+  .b-delivered{ background: rgba(99,102,241,.10); border-color: rgba(99,102,241,.18); color:#3730a3; }
+  .b-pending{ background: rgba(107,114,128,.10); border-color: rgba(107,114,128,.18); color:#374151; }
+
+  .muted{ color: var(--muted); font-weight: 600; }
+
+  @media (max-width: 860px){
+    thead{ display:none; }
+    .table, tbody, tr, td{ display:block; width:100%; }
+    tbody tr{ margin-bottom: 12px; }
+    tbody td{
+      border-radius: 14px !important;
+      border-left: 1px solid rgba(255,255,255,.55) !important;
+      border-right: 1px solid rgba(255,255,255,.55) !important;
+      margin-bottom: 8px;
+    }
+    tbody td::before{
+      content: attr(data-label);
+      display:block;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #6b7280;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="page-title">
+    <div>
+      <h1>Mes commandes</h1>
+      <p class="muted">Suivi de tes commandes et de la livraison.</p>
+    </div>
+  </div>
+
+  <div class="glass-card">
+    <div class="glass-inner">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>💊 Médicament</th>
+            <th>📦 Quantité</th>
+            <th>🧾 Statut commande</th>
+            <th>🚚 Statut livraison</th>
+            <th>📅 Date commande</th>
+            <th>📆 Date livraison</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for c in commandes %}
+          <tr>
+            <td data-label="Médicament"><strong>{{ c.medicament.nom }}</strong></td>
+            <td data-label="Quantité" class="muted">{{ c.quantite }}</td>
+
+            <!-- Statut commande -->
+            <td data-label="Statut commande">
+              {% if c.statut == "en_attente" %}
+                <span class="badge b-wait">⏳ En attente</span>
+              {% elif c.statut == "acceptee" %}
+                <span class="badge b-ok">✅ Acceptée</span>
+              {% else %}
+                <span class="badge b-no">❌ Refusée</span>
+              {% endif %}
+            </td>
+
+            <!-- Statut livraison (champ séparé) -->
+            <td data-label="Statut livraison">
+              {% if c.statut_livraison == "livree" %}
+                <span class="badge b-delivered">📦 Livrée</span>
+              {% elif c.statut_livraison == "en_attente" %}
+                <span class="badge b-pending">🕒 En attente</span>
+              {% else %}
+                <span class="badge b-no">⛔ Refusée</span>
+              {% endif %}
+            </td>
+
+            <td data-label="Date commande" class="muted">{{ c.date_commande }}</td>
+
+            <td data-label="Date livraison" class="muted">
+              {% if c.date_livraison %}
+                {{ c.date_livraison }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td data-label="Info" colspan="6" class="muted">Aucune commande.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div style="padding: 6px 6px 14px;">
+        <a class="ghost-link" href="{% url 'pharmacie:home' %}">⬅ Retour à la liste</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
